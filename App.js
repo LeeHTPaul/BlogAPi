@@ -31,10 +31,10 @@ export default function App() {
     </View>
   ) : (
     <NavigationContainer>
-      <Stack.Navigator mode="modal" headerMode="none"
+      <Stack.Navigator mode="modal" 
         initialRouteName={ signedIn ? "Account" : "SignIn"}>
         <Stack.Screen component={AccountScreen} name="Account" />
-        <Stack.Screen component={SignInScreen} name="SignIn" />
+        <Stack.Screen options={{headerShown: false}} component={SignInScreen} name="SignIn" />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -42,9 +42,11 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.5,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
 });
+
+//headerMode="none"  
