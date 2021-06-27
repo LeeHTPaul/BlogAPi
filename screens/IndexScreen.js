@@ -136,9 +136,8 @@ export default function IndexScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-        <FlatList data={posts} renderItem={renderItem} />
+        <FlatList data={posts} renderItem={renderItem} keyExtractor={item => item.id} />
     </View>
-    
   );
 }
 

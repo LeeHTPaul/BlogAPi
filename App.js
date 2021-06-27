@@ -1,8 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect} from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import SignInScreen from "./screens/SignInScreen";
 import AccountScreen from "./screens/AccountScreen";
+import ShowScreen from "./screens/ShowScreen";
+import CreateScreen from "./screens/CreateScreen";
+//CreateScreen
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,9 +34,11 @@ export default function App() {
     </View>
   ) : (
     <NavigationContainer>
-      <Stack.Navigator mode="modal" 
+      <Stack.Navigator
         initialRouteName={ signedIn ? "Account" : "SignIn"}>
         <Stack.Screen component={AccountScreen} name="Account" />
+        <Stack.Screen component={ShowScreen} name="Show" />
+        <Stack.Screen component={CreateScreen} name="Create" />
         <Stack.Screen options={{headerShown: false}} component={SignInScreen} name="SignIn" />
       </Stack.Navigator>
     </NavigationContainer>
@@ -50,3 +55,4 @@ const styles = StyleSheet.create({
 });
 
 //headerMode="none"  
+//      <Stack.Navigator mode="modal" 
