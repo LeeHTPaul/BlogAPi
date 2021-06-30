@@ -1,5 +1,5 @@
   import React from "react";
-  import {  TouchableOpacity,Button, StyleSheet, Text, View } from "react-native";
+  import { ActivityIndicator, TouchableOpacity,Button, StyleSheet, Text, View } from "react-native";
   import { commonStyles } from "../styles/commonStyles";
   import AsyncStorage from "@react-native-async-storage/async-storage";
   import axios from "axios";
@@ -14,6 +14,7 @@
   const API = "https://LHT2021.pythonanywhere.com";
   const API_WHO = "/whoami";
   const API_POST = "/posts";
+  const API_DELETE = "/post/";
  
   function HomeScreen() {
     return (
@@ -33,7 +34,7 @@
       console.log("right top");
       navigation.setOptions({ 
           headerRight: () => (
-          <TouchableOpacity onPress={()=>navigation.navigate('Stack', { screen: 'Show'})}>
+          <TouchableOpacity onPress={()=>navigation.navigate('Create')}>
             <Ionicons
               name="ios-create-outline"
               size={30}
@@ -45,8 +46,25 @@
             />
           </TouchableOpacity>
         ),
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => signOut()}
+          style={styles.SignOutButton}>
+              <Text style={styles.SignOutText}>Quit</Text>
+          </TouchableOpacity>
+        ),
+        headerTitleAlign: "center",
       });
     });
+
+    useEffect(() => {
+      const removeListener = navigation.addListener("focus", () => {
+        console.log("running nav listener");
+        setUsername(<ActivityIndicator/>);
+        getUsername();
+      });
+        getUsername();
+      return removeListener;
+    }, []);
 
     //    navigation.navigate('AuthStack', { screen: 'SignIn' });
     function signOut() {
@@ -88,7 +106,7 @@
       console.log(response);
       setPosts(response.data);
       //console.log("posts=", posts);
-      console.log(response.data[2].title);
+      //console.log(response.data[2].title);
   
       } catch (error) {
         console.log("Error get posts");
@@ -104,6 +122,33 @@
       getPosts();
     }, []  );
 
+
+    async function deletePost(id) {
+      //Keyboard.dismiss();
+      //setIsLoading(true);
+  // const response = await axios.delete(API_MODIFYPOST + "/" + posts.id, { headers: { Authorization: `JWT ${token}` }, });
+      try {
+        const token = await AsyncStorage.getItem("token");
+  
+        const response = await axios.delete(API + API_DELETE + id, { headers: { Authorization: `JWT ${token}` }, });
+  
+        //setIsLoading(false);
+        //navigation.navigate('account');
+      }
+      catch (error) {
+        //setIsLoading(false);
+  
+        if (error.response) {
+          if (error.response.status == 401)
+            signOut();
+          else
+            console.log(error.response.data);
+        } 
+        else
+          console.log(error);
+      }
+    }
+
   // The function to render each row in FlatList
   let iconName;
   function renderItem({ item }) {
@@ -114,8 +159,9 @@
           justifyContent: "space-between",
         }}
       >
-        <Text onPress={() => navigation.navigate("Show", {item})}> {item.title}</Text>
-        <TouchableOpacity onPress={() => signOut()}> 
+        <Text onPress={() => navigation.navigate("Show", item)}> {item.title}</Text>
+   
+        <TouchableOpacity onPress={() => deletePost(item.id)}> 
         <Ionicons
            name={iconName} 
            size={16}
@@ -129,12 +175,27 @@
 
     return (
       <View style={styles.container}>
-        <FlatList data={posts} renderItem={renderItem} keyExtractor={item => item.id} />
+        <FlatList data={posts} renderItem={renderItem} keyExtractor={item => item.id.toString()} />
       </View>
     );
   }
 
-  const styles = StyleSheet.create({});
+  const styles = StyleSheet.create({
+    SignOutButton: {
+      backgroundColor: "red",
+      width: 50,
+      alignItems: "center",
+      padding: 20,
+      marginTop: 20,
+      marginBottom: 20,
+      borderRadius: 20,
+    },
+    SignOutText: {
+      color: "white",
+      fontWeight: "bold",
+      fontSize: 18,
+    },
+  });
 
   /*
           <Tab.Navigator>
