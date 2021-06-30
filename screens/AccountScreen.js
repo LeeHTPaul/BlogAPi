@@ -14,17 +14,8 @@
   const API = "https://LHT2021.pythonanywhere.com";
   const API_WHO = "/whoami";
   const API_POST = "/posts";
-  const API_DELETE = "/post/";
+  const API_DELETE = "/posts/";
  
-  function HomeScreen() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home!</Text>
-      </View>
-    );
-  }
-
-
   //const Tab = createBottomTabNavigator();
 
   export default function AccountScreen({ navigation }) {
@@ -61,8 +52,10 @@
         console.log("running nav listener");
         setUsername(<ActivityIndicator/>);
         getUsername();
+        getPosts();
       });
         getUsername();
+        getPosts();
       return removeListener;
     }, []);
 
@@ -98,7 +91,7 @@
       }
   
     async function getPosts() {
-      console.log(" index get post ");
+      console.log("account get post ");
       try {
       const response = await axios.get(API + API_POST, {
       });
@@ -124,8 +117,7 @@
 
 
     async function deletePost(id) {
-      //Keyboard.dismiss();
-      //setIsLoading(true);
+
   // const response = await axios.delete(API_MODIFYPOST + "/" + posts.id, { headers: { Authorization: `JWT ${token}` }, });
       try {
         const token = await AsyncStorage.getItem("token");
@@ -147,6 +139,8 @@
         else
           console.log(error);
       }
+      getPosts();
+      navigation.navigate("Account");
     }
 
   // The function to render each row in FlatList

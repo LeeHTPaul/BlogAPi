@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
-import { TextInput, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { TextInput, StyleSheet, Text, View, TouchableOpacity, Keyboard } from "react-native";
 import { commonStyles } from "../styles/commonStyles";
 
 const API_CREATEPOST = "https://LHT2021.pythonanywhere.com/create";
@@ -10,10 +10,23 @@ const API_CREATEPOST = "https://LHT2021.pythonanywhere.com/create";
 export default function CreateScreen({ navigation }) {
   const [Title, setTitle] = useState("");
   const [Content, setContent] = useState("");
+  const [TitleError, setTitleError] = React.useState(false);
+  const [errorText, setErrorText] = useState("");
   
-async function savePost() {
+  async function savePost() {
     console.log("savepost", Content," ",Title);
-    
+    var NoError = true;
+    Keyboard.dismiss();
+
+    if (Title == "") {
+      setTitleError(true);
+      setErrorText("Title cannot be blank");
+      NoError = false;
+    }
+    else
+      setTitleError(false);
+
+    if (NoError) {
     const token = await AsyncStorage.getItem("token");
     const response = await axios.post(API_CREATEPOST,
       {
@@ -22,7 +35,8 @@ async function savePost() {
       },
       )
     navigation.navigate("Account"); 
-    //{
+    }
+    //
     //  Title, Content
     //},
   }
@@ -31,6 +45,7 @@ async function savePost() {
     <View style={styles.container}>
       <Text style={{ fontSize: 24, marginTop: 10 }}>Create your Posts here</Text>
       <Text style={[commonStyles.subTitle, {marginTop : 20} ]}>Title</Text>
+      <Text style={{ fontSize: 20, color: "red" }}>{errorText}</Text>
       <TextInput style={styles.textInput} autoCapitalize="sentences" value={Title} onChangeText={(input) => setTitle(input)}/>
       <Text style={[commonStyles.subTitle, {marginTop : 10}]}>Content</Text>
       <TextInput style={styles.textInput} multiline={true} autoCapitalize="sentences" value={Content} onChangeText={(input) => setContent(input)}/> 
