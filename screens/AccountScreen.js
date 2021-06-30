@@ -63,8 +63,8 @@
     function signOut() {
       AsyncStorage.removeItem("token");
       AsyncStorage.getItem("token").then(result => console.log(`Token: ${result}`))
-      navigation.navigate("SignIn");
-      //navigation.replace("SignIn");
+      //navigation.navigate("SignIn");
+      navigation.replace("SignIn");
     }
 
     const [username, setUsername] = useState("");

@@ -57,7 +57,7 @@ export default function App() {
       <Stack.Navigator
         initialRouteName={ signedIn ? "Account" : "SignIn"}>
         <Stack.Screen component={AccountScreen} name="Account" options={{title: "Post list"}}/>
-        <Stack.Screen component={CreateScreen} name="Create" />
+        <Stack.Screen options={{title: "Back to Post list"}} component={CreateScreen} name="Create" />
         <Stack.Screen options={{headerShown: false}} component={SignInScreen} name="SignIn" />
         <Stack.Screen options={{title: "Back to Post list"}} name="Show" component={ShowScreen} mode="modal"/>
       </Stack.Navigator>
